@@ -1,0 +1,20 @@
+services:
+  servicio-consumible:
+    image: javillour/servicio-tt1:amd64 
+    networks:
+      - red-privada
+
+  mi-app:
+    image: trabajo-tt1
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVICIO_URL=http://servicio-consumible:8080
+    networks:
+      - red-privada
+    depends_on:
+      - servicio-consumible
+
+networks:
+  red-privada:
+    driver: bridge

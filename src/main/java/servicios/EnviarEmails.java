@@ -13,7 +13,7 @@ public class EnviarEmails implements interfaces.InterfazEnviarEmails{
 	
 	public EnviarEmails() {
 		ApiClient cliente = new ApiClient();
-		cliente.setBasePath("http://host.docker.internal:8080");
+		cliente.setBasePath("http://servicio-consumible:8080");
 		this.emailApi = new EmailApi(cliente);
 	}
 	@Override

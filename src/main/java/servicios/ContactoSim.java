@@ -19,7 +19,7 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 	
 	public ContactoSim() {
 		cliente = new ApiClient();
-        cliente.setBasePath("http://localhost:8080");
+        cliente.setBasePath("http://servicio-consumible:8080");
         solicitudApi = new SolicitudApi(cliente);
         resultados = new ResultadosApi(cliente);
         
