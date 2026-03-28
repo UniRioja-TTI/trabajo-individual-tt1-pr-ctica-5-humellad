@@ -22,7 +22,7 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 	
 	public ContactoSim() {
 		cliente = new ApiClient();
-        cliente.setBasePath("http://localhost:8080");
+        cliente.setBasePath("http://host.docker.internal:8080");
         solicitudApi = new SolicitudApi(cliente);
         resultados = new ResultadosApi(cliente);
         
