@@ -7,6 +7,12 @@ public class Punto {
 	
 	public Punto() {}
 	
+	public Punto(int x, int y, String color) {
+		this.x=x;
+		this.y=y;
+		this.color=color;
+	}
+	
 	public int getX() {
 		return x;
 	}

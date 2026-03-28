@@ -1,29 +1,38 @@
 package servicios;
 
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.api.EmailApi;
-import org.openapitools.client.model.EmailResponse;
+
+
+import com.tt1.trabajo.utilidades.ApiClient;
+import com.tt1.trabajo.utilidades.ApiException;
+import com.tt1.trabajo.utilidades.api.EmailApi;
+import com.tt1.trabajo.utilidades.model.EmailResponse;
 
 import modelo.Destinatario;
 
 public class EnviarEmails implements interfaces.InterfazEnviarEmails{
 
+	private EmailApi emailApi;
+	
+	public EnviarEmails() {
+		ApiClient cliente = new ApiClient();
+		cliente.setBasePath("http://localhost:8080");
+		this.emailApi = new EmailApi(cliente);
+	}
 	@Override
 	public boolean enviarEmail(Destinatario dest, String email) {
-        ApiClient apiClient = new ApiClient();
-
-        EmailApi emailApi = new EmailApi(apiClient);
-
-        try {
-            EmailResponse respuesta = emailApi.emailPost(dest.toString(), email);
-            
-            if (respuesta.getDone()) {
-                System.out.println("Correo enviado con éxito");
-            }
-        } catch (Exception e) {
-            System.err.println("Error al enviar email: " + e.getMessage());
-            return false;
-        }
-        return true;
+		EmailResponse respuesta;
+		try {
+			respuesta = emailApi.emailPost(dest.getDireccion(), email);
+			if (respuesta == null) {
+	        	return false;
+	        }
+	        else if(respuesta.getDone()) {
+	        	return true;
+	        }
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return false;
 	}
 }
