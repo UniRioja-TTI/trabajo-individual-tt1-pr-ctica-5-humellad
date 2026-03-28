@@ -31,6 +31,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+    		<groupId>io.projectreactor</groupId>
+    		<artifactId>reactor-core</artifactId>
+    	</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-restclient</artifactId>
 		</dependency>
@@ -46,6 +50,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-restclient-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+    		<groupId>com.fasterxml.jackson.datatype</groupId>
+    		<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -103,7 +115,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>7.4.0</version>
+				<version>7.21.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -112,13 +124,11 @@
 						<configuration>
 							<inputSpec>http://localhost:8080/swagger/v1/swagger.json</inputSpec>
 							<generatorName>java</generatorName>
-							<library>okhttp-gson</library>
-							<apiPackage>com.tt1.trabajo.utilidades.api</apiPackage>
-							<modelPackage>com.tt1.trabajo.utilidades.model</modelPackage>
-							<invokerPackage>com.tt1.trabajo.utilidades</invokerPackage>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
+							<library>webclient</library>
 							<configOptions>
+								<sourceFolder>src/gen/java/main</sourceFolder>
+								<useJakartaEe>true</useJakartaEe>
+								<dateLibrary>java8</dateLibrary>
 								<openApiNullable>false</openApiNullable>
 							</configOptions>
 						</configuration>

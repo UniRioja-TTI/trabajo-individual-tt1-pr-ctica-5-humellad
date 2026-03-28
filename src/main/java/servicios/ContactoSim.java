@@ -2,13 +2,10 @@ package servicios;
 
 import java.util.*;
 
+import org.openapitools.client.*;
+import org.openapitools.client.api.*;
+import org.openapitools.client.model.*;
 import org.springframework.stereotype.Service;
-
-import com.tt1.trabajo.utilidades.*;
-import com.tt1.trabajo.utilidades.api.*;
-import com.tt1.trabajo.utilidades.model.ResultsResponse;
-import com.tt1.trabajo.utilidades.model.Solicitud;
-import com.tt1.trabajo.utilidades.model.SolicitudResponse;
 
 import modelo.*;
 
@@ -22,7 +19,7 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 	
 	public ContactoSim() {
 		cliente = new ApiClient();
-        cliente.setBasePath("http://host.docker.internal:8080");
+        cliente.setBasePath("http://localhost:8080");
         solicitudApi = new SolicitudApi(cliente);
         resultados = new ResultadosApi(cliente);
         
@@ -30,11 +27,13 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
     	Entidad b = new Entidad(2, " b", "Ej2");
     	Entidad c = new Entidad(3, " c", "Ej3");
     	Entidad d = new Entidad(4, " d", "Ej4");
+    	Entidad e = new Entidad(5, " e", "Ej5");
     	
     	entidades.put(a.getId(), a);
     	entidades.put(b.getId(), b);
     	entidades.put(c.getId(), c);
     	entidades.put(d.getId(), d);
+    	entidades.put(e.getId(), e);
 	}
     
 	@Override
@@ -58,37 +57,24 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 		solicitud.setCantidadesIniciales(cant);
 		solicitud.setNombreEntidades(nom);
 		
-		try {
-			SolicitudResponse respuesta = solicitudApi.solicitudSolicitarPost(this.usuario, solicitud);
-			if(respuesta==null) {
-				return -2;
-			}
-			else if(respuesta.getTokenSolicitud() == null) {
-				return -3;
-			}
-			return respuesta.getTokenSolicitud();
-		} catch (ApiException e) {
-			e.printStackTrace();
-			return -4;
+		SolicitudResponse respuesta = solicitudApi.solicitudSolicitarPost(this.usuario, solicitud).block();
+		if(respuesta==null) {
+			return -2;
 		}
+		else if(respuesta.getTokenSolicitud() == null) {
+			return -3;
+		}
+		return respuesta.getTokenSolicitud();
 	}
 
 	@Override
 	public DatosSimulation descargarDatos(int ticket) {
-		try {
-			ResultsResponse resultado = resultados.resultadosPost(this.usuario, ticket);
-			if(resultado == null) {
-				return null;
-			}
-			if(resultado.getDone()) {
-				return dataEnFormato(resultado.getData());
-			}
-			else {
-				return null;
-			}
-		} catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ResultsResponse resultado = resultados.resultadosPost(this.usuario, ticket).block();
+		if(resultado == null) {
+			return null;
+		}
+		if(resultado.getDone()) {
+			return dataEnFormato(resultado.getData());
 		}
 		return null;
 	}
@@ -112,6 +98,7 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 		datos.setAnchoTablero(ancho);
 		
 		Map<Integer, List<Punto>> puntos = new HashMap<Integer, List<Punto>>();
+		Punto p = null;
 		for (int i = 1; i < lineas.length; i++) {
 		    String[] partes = lineas[i].split(",");
 		    
@@ -122,7 +109,7 @@ public class ContactoSim implements interfaces.InterfazContactoSim{
 		    
 		    
 		    
-		    Punto p = new Punto(x, y, color);
+		    p = new Punto(x, y, color);
 		    if(!puntos.containsKey(t)) {
 		    	puntos.put(t, new ArrayList<Punto>());
 		    }
